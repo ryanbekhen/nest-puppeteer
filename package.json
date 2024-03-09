@@ -1,6 +1,6 @@
 {
   "name": "@ryanbekhen/nest-puppeteer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "NestJS Puppeteer is a module that allows you to use Puppeteer in your NestJS application.",
   "author": {
     "name": "Achmad Irianto Eka Putra",
