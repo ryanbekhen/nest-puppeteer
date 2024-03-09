@@ -60,7 +60,7 @@ export class PuppeteerCoreModule
     const contextProvider = {
       provide: getContextToken(instanceName),
       async useFactory(browser: Browser) {
-        return browser.createBrowserContext();
+        return browser.defaultBrowserContext();
       },
       inject: [getBrowserToken(instanceName)],
     };
@@ -68,6 +68,8 @@ export class PuppeteerCoreModule
     const pageProvider = {
       provide: getPageToken(instanceName),
       async useFactory(context: BrowserContext) {
+        const pages = await context.pages();
+        if (pages.length > 0) return pages[0];
         return await context.newPage();
       },
       inject: [getContextToken(instanceName)],
@@ -107,7 +109,7 @@ export class PuppeteerCoreModule
     const contextProvider = {
       provide: getContextToken(puppeteerInstanceName),
       async useFactory(browser: Browser) {
-        return await browser.createBrowserContext();
+        return browser.defaultBrowserContext();
       },
       inject: [
         PUPPETEER_MODULE_OPTIONS,

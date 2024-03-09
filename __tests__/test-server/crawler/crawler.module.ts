@@ -4,7 +4,7 @@ import { CrawlerService } from './crawler.service';
 import { CrawlerController } from './crawler.controller';
 
 @Module({
-  imports: [PuppeteerModule.forFeature()],
+  imports: [PuppeteerModule.forFeature(['crawler'])],
   controllers: [CrawlerController],
   providers: [CrawlerService],
 })

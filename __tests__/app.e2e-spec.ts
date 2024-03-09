@@ -17,21 +17,6 @@ describe('AppController (e2e)', () => {
 
   afterAll(() => app.close());
 
-  it('/ (GET)', async () => {
-    const { body } = await request(app.getHttpServer())
-      .get('/?url=https://nestjs.com')
-      .expect(200);
-
-    expect(body).toEqual({ title: 'NestJS - A progressive Node.js framework' });
-  }, 30000);
-
-  it('/context (GET)', async () => {
-    const { body } = await request(app.getHttpServer())
-      .get('/context')
-      .expect(200);
-    expect(body).toHaveProperty('incognito', false);
-  });
-
   it('/crawler (GET)', async () => {
     const { body } = await request(app.getHttpServer())
       .get('/crawler?url=https://nestjs.com')
@@ -44,6 +29,6 @@ describe('AppController (e2e)', () => {
     const { body } = await request(app.getHttpServer())
       .get('/crawler/context')
       .expect(200);
-    expect(body).toHaveProperty('incognito', true);
+    expect(body).toHaveProperty('incognito', false);
   });
 });

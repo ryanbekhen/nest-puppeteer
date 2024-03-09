@@ -23,7 +23,6 @@ export class CrawlerController {
   }
 
   isIncognito(context: BrowserContext, browser: Browser) {
-    const defaultContext = browser.defaultBrowserContext();
-    return context !== defaultContext;
+    return context !== browser.defaultBrowserContext();
   }
 }
