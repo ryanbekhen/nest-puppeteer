@@ -4,7 +4,7 @@ import { CrawlerModule } from './crawler/crawler.module';
 
 @Module({
   imports: [
-    PuppeteerModule.forRoot({ isGlobal: true, headless: false }),
+    PuppeteerModule.forRoot({ isGlobal: true, headless: true }),
     CrawlerModule,
   ],
 })
