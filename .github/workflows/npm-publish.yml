@@ -58,7 +58,7 @@ jobs:
 
       - run: yarn install --frozen-lockfile --ignore-optional --non-interactive --silent
 
-      - run: npx npmPkgJsonLint .
+      - run: yarn lint
 
   publish-npm:
     needs: lint-package
