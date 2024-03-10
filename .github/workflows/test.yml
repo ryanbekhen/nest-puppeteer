@@ -15,18 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macOS-latest ]
-        node: [ 14.x, 12.x, 10.x ]
-        exclude:
-          # On Windows, run tests with only the latest environments.
-          - os: windows-latest
-            node: 10.x
-          - os: windows-latest
-            node: 14.x
-          # On macOS, run tests with only the latest environments.
-          - os: macOS-latest
-            node: 10.x
-          - os: macOS-latest
-            node: 14.x
+        node: [ 20.x ]
 
     runs-on: ${{ matrix.os }}
     steps:
