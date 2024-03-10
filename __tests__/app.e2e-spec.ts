@@ -15,7 +15,7 @@ describe('AppController (e2e)', () => {
     await app.init();
   }, 1000);
 
-  afterAll(() => app.close());
+  afterAll(async () => await app.close());
 
   it('/crawler (GET)', async () => {
     const { body } = await request(app.getHttpServer())
