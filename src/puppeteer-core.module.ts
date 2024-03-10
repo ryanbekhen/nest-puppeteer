@@ -21,11 +21,7 @@ import type {
   PuppeteerModuleOptions,
   PuppeteerOptionsFactory,
 } from './interfaces';
-import {
-  getBrowserToken,
-  getContextToken,
-  getPageToken,
-} from './puppeteer.util';
+import { getBrowserToken, getContextToken, getPageToken } from './common';
 
 @Global()
 @Module({})

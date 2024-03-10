@@ -1,9 +1,15 @@
-# Nest Puppeteer
+# NestJS Puppeteer
 
-The `Nest Puppeteer` library is built upon an existing repository, namely `github.com/tinovyatkin/nest-puppeteer`.
-The development of the original repository has ceased, hence this library was created as a continuation of that
-development. The aim is to maintain and update the functionalities provided by the original repository, as well as to a
-dd new features that may be needed by the users.
+[![npm version](https://badge.fury.io/js/nestjs-pptr.svg)](https://badge.fury.io/js/nestjs-pptr)
+
+A [NestJS](https://nestjs.com/) module for [Puppeteer](https://pptr.dev/). This module provides a service that can be
+injected into your controllers and services to perform various tasks related to web scraping and automation.
+
+> **Note:** This module is built upon an existing repository,
+> namely [github.com/tinovyatkin/nest-puppeteer](https://github.com/tinovyatkin/nest-puppeteer).
+> The development of the original repository has ceased, hence this library was created as a continuation of that
+> development. The aim is to maintain and update the functionalities provided by the original repository, as well as to
+> add new features that may be needed by the users.
 
 ## Installation
 
@@ -20,6 +26,12 @@ The library provides a `PuppeteerModule` that can be used to register the `Puppe
 application. The `PuppeteerService` can then be injected into your controllers and services to perform various tasks
 related to web scraping and automation.
 
+### Registering the Module
+
+To register the module, you can use the `forRoot` method to register the `PuppeteerService` as a provider in your
+application. The `forRoot` method accepts an optional `PuppeteerModuleOptions` object that can be used to configure the
+module.
+
 ```typescript
 // app.module.ts
 import { Module } from '@nestjs/common';
@@ -35,6 +47,12 @@ import { AppService } from './app.service';
 export class AppModule {
 }
 ```
+
+### Using the Service
+
+The `PuppeteerService` can be injected into your controllers and services to perform various tasks related to web
+scraping and automation. The service provides methods to create new browser instances, open new pages, and perform
+various tasks on those pages.
 
 ```typescript
 // app.service.ts
@@ -54,6 +72,11 @@ export class AppService {
   }
 }
 ```
+
+### Using the Service with Custom Options
+
+The `PuppeteerService` can be configured with custom options by using the `forRoot` method to register the module. The
+`forRoot` method accepts an optional `PuppeteerModuleOptions` object that can be used to configure the module.
 
 ```typescript
 // app.controller.ts

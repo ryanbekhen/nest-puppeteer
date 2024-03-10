@@ -1,4 +1,4 @@
-import { DEFAULT_PUPPETEER_INSTANCE_NAME } from './puppeteer.constants';
+import { DEFAULT_PUPPETEER_INSTANCE_NAME } from '../puppeteer.constants';
 
 /**
  * Get a token for the Puppeteer instance for the given Browser name
