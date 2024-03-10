@@ -10,7 +10,7 @@ dd new features that may be needed by the users.
 To install the module, run the following command in your project's root directory:
 
 ```bash
-$ npm install @ryanbekhen/nest-puppeteer puppeteer
+$ npm install nestjs-pptr puppeteer
 $ npm install -D @types/puppeteer
 ```
 
@@ -23,7 +23,7 @@ related to web scraping and automation.
 ```typescript
 // app.module.ts
 import { Module } from '@nestjs/common';
-import { PuppeteerModule } from '@ryanbekhen/nest-puppeteer';
+import { PuppeteerModule } from 'nestjs-pptr';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -39,7 +39,7 @@ export class AppModule {
 ```typescript
 // app.service.ts
 import { Injectable } from '@nestjs/common';
-import { PuppeteerService } from '@ryanbekhen/nest-puppeteer';
+import { PuppeteerService } from 'nestjs-pptr';
 import { InjectPage } from './puppeteer.decorators';
 import { Page } from 'puppeteer';
 

@@ -1,5 +1,5 @@
 {
-  "name": "nest-pptr",
+  "name": "nestjs-pptr",
   "version": "1.0.1",
   "description": "NestJS Puppeteer is a module that allows you to use Puppeteer in your NestJS application.",
   "author": {
