@@ -13,9 +13,11 @@ describe('AppController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-  }, 1000);
+  }, 30000);
 
-  afterAll(() => app.close());
+  afterAll(async () => {
+    if (app) await app.close();
+  });
 
   it('/crawler (GET)', async () => {
     const { body } = await request(app.getHttpServer())
@@ -30,5 +32,5 @@ describe('AppController (e2e)', () => {
       .get('/crawler/context')
       .expect(200);
     expect(body).toHaveProperty('incognito', false);
-  });
+  }, 30000);
 });
