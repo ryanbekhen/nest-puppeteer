@@ -8,7 +8,7 @@ import {
   Provider,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import type { Browser, BrowserContext, LaunchOptions } from 'puppeteer';
+import type { Browser } from 'puppeteer';
 import { launch } from 'puppeteer';
 import {
   DEFAULT_CHROME_LAUNCH_OPTIONS,
@@ -21,7 +21,8 @@ import type {
   PuppeteerModuleOptions,
   PuppeteerOptionsFactory,
 } from './interfaces';
-import { getBrowserToken, getContextToken, getPageToken } from './common';
+import { getBrowserToken, getPageToken } from './common';
+import { Type } from '@nestjs/common/interfaces';
 
 @Global()
 @Module({})
@@ -33,95 +34,69 @@ export class PuppeteerCoreModule
     private readonly moduleRef: ModuleRef,
   ) {}
 
-  onApplicationShutdown() {
-    return this.onModuleDestroy();
-  }
+  static forRoot(options?: PuppeteerModuleOptions): DynamicModule {
+    if (!options) options = {};
 
-  static forRoot(
-    launchOptions: LaunchOptions = DEFAULT_CHROME_LAUNCH_OPTIONS,
-    instanceName: string = DEFAULT_PUPPETEER_INSTANCE_NAME,
-  ): DynamicModule {
+    if (!options.instanceName)
+      options.instanceName = DEFAULT_PUPPETEER_INSTANCE_NAME;
+
+    if (!options.launchOptions)
+      options.launchOptions = DEFAULT_CHROME_LAUNCH_OPTIONS;
+
     const instanceNameProvider = {
       provide: PUPPETEER_INSTANCE_NAME,
-      useValue: instanceName,
+      useValue: options.instanceName,
     };
 
     const browserProvider = {
-      provide: getBrowserToken(instanceName),
+      provide: getBrowserToken(options.instanceName),
       async useFactory() {
-        return await launch(launchOptions);
+        return await launch(options.launchOptions);
       },
     };
 
-    const contextProvider = {
-      provide: getContextToken(instanceName),
-      async useFactory(browser: Browser) {
-        return browser.defaultBrowserContext();
+    const pagesProvider = {
+      provide: getPageToken(options.instanceName),
+      useFactory: async (browser: Browser) => {
+        return await browser.newPage();
       },
-      inject: [getBrowserToken(instanceName)],
-    };
-
-    const pageProvider = {
-      provide: getPageToken(instanceName),
-      async useFactory(context: BrowserContext) {
-        const pages = await context.pages();
-        if (pages.length > 0) return pages[0];
-        return await context.newPage();
-      },
-      inject: [getContextToken(instanceName)],
+      inject: [getBrowserToken(options.instanceName)],
     };
 
     return {
       module: PuppeteerCoreModule,
-      providers: [
-        instanceNameProvider,
-        browserProvider,
-        contextProvider,
-        pageProvider,
-      ],
-      exports: [browserProvider, contextProvider, pageProvider],
+      providers: [instanceNameProvider, browserProvider, pagesProvider],
+      exports: [browserProvider, pagesProvider],
     };
   }
 
   static forRootAsync(options: PuppeteerModuleAsyncOptions): DynamicModule {
-    const puppeteerInstanceName =
-      options.instanceName ?? DEFAULT_PUPPETEER_INSTANCE_NAME;
+    if (!options) options = {};
+
+    if (!options.instanceName)
+      options.instanceName = DEFAULT_PUPPETEER_INSTANCE_NAME;
 
     const instanceNameProvider = {
       provide: PUPPETEER_INSTANCE_NAME,
-      useValue: puppeteerInstanceName,
+      useValue: options.instanceName,
     };
 
     const browserProvider = {
-      provide: getBrowserToken(puppeteerInstanceName),
+      provide: getBrowserToken(options.instanceName),
       async useFactory(puppeteerModuleOptions: PuppeteerModuleOptions) {
         return await launch(
-          puppeteerModuleOptions.launchOptions ?? DEFAULT_CHROME_LAUNCH_OPTIONS,
+          puppeteerModuleOptions.launchOptions || DEFAULT_CHROME_LAUNCH_OPTIONS,
         );
       },
       inject: [PUPPETEER_MODULE_OPTIONS],
     };
 
-    const contextProvider = {
-      provide: getContextToken(puppeteerInstanceName),
-      async useFactory(browser: Browser) {
-        return browser.defaultBrowserContext();
+    const pagesProvider = {
+      provide: getPageToken(options.instanceName),
+      useFactory: async (browser: Browser) => {
+        return await browser.newPage();
       },
-      inject: [
-        PUPPETEER_MODULE_OPTIONS,
-        getBrowserToken(puppeteerInstanceName),
-      ],
-    };
-
-    const pageProvider = {
-      provide: getPageToken(puppeteerInstanceName),
-      async useFactory(context: BrowserContext) {
-        return await context.newPage();
-      },
-      inject: [
-        PUPPETEER_MODULE_OPTIONS,
-        getContextToken(puppeteerInstanceName),
-      ],
+      inject: [getBrowserToken(options.instanceName)],
     };
 
     const asyncProviders = this.createAsyncProviders(options);
@@ -131,13 +106,16 @@ export class PuppeteerCoreModule
       imports: options.imports,
       providers: [
         ...asyncProviders,
-        browserProvider,
-        contextProvider,
-        pageProvider,
         instanceNameProvider,
+        browserProvider,
+        pagesProvider,
       ],
-      exports: [browserProvider, contextProvider, pageProvider],
+      exports: [browserProvider, pagesProvider],
     };
+  }
+
+  onApplicationShutdown() {
+    return this.onModuleDestroy();
   }
 
   async onModuleDestroy() {
@@ -153,17 +131,17 @@ export class PuppeteerCoreModule
   ): Provider[] {
     if (options.useExisting || options.useFactory) {
       return [this.createAsyncOptionsProvider(options)];
-    } else if (options.useClass) {
-      return [
-        this.createAsyncOptionsProvider(options),
-        {
-          provide: options.useClass,
-          useClass: options.useClass,
-        },
-      ];
-    } else {
-      return [];
     }
+
+    const useClass = options.useClass as Type<PuppeteerOptionsFactory>;
+
+    return [
+      this.createAsyncOptionsProvider(options),
+      {
+        provide: useClass,
+        useClass,
+      },
+    ];
   }
 
   private static createAsyncOptionsProvider(
@@ -173,26 +151,20 @@ export class PuppeteerCoreModule
       return {
         provide: PUPPETEER_MODULE_OPTIONS,
         useFactory: options.useFactory,
-        inject: options.inject ?? [],
+        inject: options.inject || [],
       };
-    } else if (options.useExisting) {
-      return {
-        provide: PUPPETEER_MODULE_OPTIONS,
-        async useFactory(optionsFactory: PuppeteerOptionsFactory) {
-          return optionsFactory.createPuppeteerOptions();
-        },
-        inject: [options.useExisting],
-      };
-    } else if (options.useClass) {
-      return {
-        provide: PUPPETEER_MODULE_OPTIONS,
-        async useFactory(optionsFactory: PuppeteerOptionsFactory) {
-          return optionsFactory.createPuppeteerOptions();
-        },
-        inject: [options.useClass],
-      };
-    } else {
-      throw new Error('Invalid PuppeteerModule options');
     }
+
+    const inject = [
+      (options.useClass ||
+        options.useExisting) as Type<PuppeteerOptionsFactory>,
+    ];
+
+    return {
+      provide: PUPPETEER_MODULE_OPTIONS,
+      useFactory: async (optionsFactory: PuppeteerOptionsFactory) =>
+        await optionsFactory.createPuppeteerOptions(),
+      inject,
+    };
   }
 }

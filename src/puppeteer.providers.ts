@@ -1,13 +1,15 @@
-import type { BrowserContext } from 'puppeteer';
-import { getContextToken, getPageToken } from './common';
+import { Browser } from 'puppeteer';
+import { getBrowserToken, getPageToken } from './common';
 
 export function createPuppeteerProviders(
-  instanceName?: string,
   pages: string[] = [],
+  instanceName?: string,
 ) {
-  return pages.map((page) => ({
+  return (pages || []).map((page) => ({
+    inject: [getBrowserToken(instanceName)],
     provide: getPageToken(page),
-    useFactory: (context: BrowserContext) => context.newPage(),
-    inject: [getContextToken(instanceName)],
+    useFactory: async (browser: Browser) => {
+      return await browser.newPage();
+    },
   }));
 }

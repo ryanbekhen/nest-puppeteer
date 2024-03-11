@@ -19,18 +19,19 @@ describe('AppController (e2e)', () => {
     if (app) await app.close();
   });
 
-  it('/crawler (GET)', async () => {
+  it('/ (GET)', async () => {
     const { body } = await request(app.getHttpServer())
-      .get('/crawler?url=https://nestjs.com')
+      .get('/?url=https://bing.com')
       .expect(200);
 
-    expect(body).toEqual({ title: 'NestJS - A progressive Node.js framework' });
+    expect(body).toEqual({ title: 'Bing' });
   }, 30000);
 
-  it('/crawler/context (GET)', async () => {
+  it('/crawler (GET)', async () => {
     const { body } = await request(app.getHttpServer())
-      .get('/crawler/context')
+      .get('/crawler?url=https://google.com')
       .expect(200);
-    expect(body).toHaveProperty('incognito', false);
+
+    expect(body).toEqual({ title: 'Google' });
   }, 30000);
 });

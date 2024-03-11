@@ -17,7 +17,12 @@ To install the module, run the following command in your project's root director
 
 ```bash
 $ npm install nestjs-pptr puppeteer
-$ npm install -D @types/puppeteer
+$ npm install --save-dev @types/puppeteer
+
+# or
+
+$ yarn add nestjs-pptr puppeteer
+$ yarn add -D @types/puppeteer
 ```
 
 ## Usage
@@ -97,6 +102,8 @@ export class AppController {
   }
 }
 ```
+
+More examples can be found in the [\__test\__](./__tests__) directory.
 
 ## License
 

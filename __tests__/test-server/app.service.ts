@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Page } from 'puppeteer';
-import { InjectPage } from '../../../src';
+import { InjectPage } from '../../src';
 
 @Injectable()
-export class CrawlerService {
-  constructor(@InjectPage('crawler') private readonly page: Page) {}
+export class AppService {
+  constructor(@InjectPage() private readonly page: Page) {}
 
   async getTitleOfPage(url: string) {
     await this.page.goto(url);

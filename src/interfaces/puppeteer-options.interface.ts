@@ -6,7 +6,8 @@ import type { PuppeteerLaunchOptions } from 'puppeteer';
  */
 export interface PuppeteerModuleOptions {
   instanceName?: string;
-
+  isGlobal?: boolean;
+  isIncognito?: boolean;
   launchOptions?: PuppeteerLaunchOptions;
 }
 

@@ -1,9 +1,5 @@
 import { Inject } from '@nestjs/common';
-import {
-  getBrowserToken,
-  getContextToken,
-  getPageToken,
-} from './puppeteer.util';
+import { getBrowserToken, getPageToken } from './puppeteer.util';
 
 /**
  * Inject the Browser object associated with a connection
@@ -11,13 +7,6 @@ import {
  */
 export const InjectBrowser = (instanceName?: string) =>
   Inject(getBrowserToken(instanceName));
-
-/**
- * Inject the Puppeteer BrowserContext object associated with a browser
- * @param instanceName The unique name associated with the browser
- */
-export const InjectContext = (instanceName?: string) =>
-  Inject(getContextToken(instanceName));
 
 /**
  * Inject the Puppeteer Page object associated with BrowserContext

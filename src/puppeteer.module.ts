@@ -13,18 +13,14 @@ import type {
 export class PuppeteerModule {
   /**
    * Inject the Puppeteer synchronously.
-   * @param options Options for the Browser to be launched
-   * @param instanceName A unique name for the connection.  If not specified, a default name
+   * @param options Options for the Browser to be launched.
    * will be used.
    */
-  static forRoot(
-    options?: PuppeteerModuleOptions['launchOptions'] & { isGlobal?: boolean },
-    instanceName?: string,
-  ): DynamicModule {
+  static forRoot(options?: PuppeteerModuleOptions): DynamicModule {
     return {
       module: PuppeteerModule,
       global: options?.isGlobal,
-      imports: [PuppeteerCoreModule.forRoot(options, instanceName)],
+      imports: [PuppeteerCoreModule.forRoot(options)],
     };
   }
 
@@ -51,7 +47,7 @@ export class PuppeteerModule {
     pages: string[] = [],
     instanceName?: string,
   ): DynamicModule {
-    const providers = createPuppeteerProviders(instanceName, pages);
+    const providers = createPuppeteerProviders(pages, instanceName);
     return {
       module: PuppeteerModule,
       providers,
