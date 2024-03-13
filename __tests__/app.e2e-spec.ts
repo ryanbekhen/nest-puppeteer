@@ -34,5 +34,5 @@ describe('AppController (e2e)', () => {
 
     expect(responses[0].body.title).toBe('Google');
     expect(responses[1].body.title).toBe('Bing');
-  });
+  }, 30000);
 });
