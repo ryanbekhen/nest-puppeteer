@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
-import { PuppeteerModule } from '../../../src';
 import { CrawlerService } from './crawler.service';
 import { CrawlerController } from './crawler.controller';
+import { PuppeteerModule } from '../../../src';
 
 @Module({
   imports: [
     PuppeteerModule.forRoot({
-      launchOptions: { headless: true },
-      instanceName: 'crawler',
+      launchOptions: {
+        headless: true,
+      },
     }),
-    PuppeteerModule.forFeature([], 'crawler'),
   ],
   controllers: [CrawlerController],
   providers: [CrawlerService],

@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { Page } from 'puppeteer';
-import { InjectPage } from '../../src';
+import { InjectCore, PuppeteerCore } from '../../src';
 
 @Injectable()
 export class AppService {
-  constructor(@InjectPage() private readonly page: Page) {}
+  constructor(@InjectCore() private readonly core: PuppeteerCore) {}
 
   async getTitleOfPage(url: string) {
-    await this.page.goto(url);
-    const title = await this.page.title();
+    const instance = await this.core.launch('App');
+    const page = await instance.browser.newPage();
+    await page.goto(url);
+    const title = await page.title();
+
     return { title };
   }
 }

@@ -19,19 +19,20 @@ describe('AppController (e2e)', () => {
     if (app) await app.close();
   });
 
-  it('/ (GET)', async () => {
-    const { body } = await request(app.getHttpServer())
-      .get('/?url=https://bing.com')
-      .expect(200);
+  it('should return title of the page', async () => {
+    const urls = ['https://google.com', 'https://bing.com'];
+    const requests = urls.map((url) => {
+      if (url.toLowerCase().includes('bing')) {
+        return request(app.getHttpServer())
+          .get(`/crawler/?url=${url}`)
+          .expect(200);
+      }
+      return request(app.getHttpServer()).get(`/?url=${url}`).expect(200);
+    });
 
-    expect(body).toEqual({ title: 'Bing' });
-  }, 30000);
+    const responses = await Promise.all(requests);
 
-  it('/crawler (GET)', async () => {
-    const { body } = await request(app.getHttpServer())
-      .get('/crawler?url=https://google.com')
-      .expect(200);
-
-    expect(body).toEqual({ title: 'Google' });
+    expect(responses[0].body.title).toBe('Google');
+    expect(responses[1].body.title).toBe('Bing');
   }, 30000);
 });

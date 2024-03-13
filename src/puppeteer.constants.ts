@@ -1,9 +1,7 @@
-import type { PuppeteerLaunchOptions } from 'puppeteer';
+import { PuppeteerLaunchOptions } from 'puppeteer';
 
-export const PUPPETEER_INSTANCE_NAME = 'PuppeteerInstanceName';
-export const PUPPETEER_MODULE_OPTIONS = 'PuppeteerModuleOptions';
-
-export const DEFAULT_PUPPETEER_INSTANCE_NAME = 'DefaultPuppeteer';
+export const PUPPETEER_MODULE_OPTIONS = 'PUPPETEER_MODULE_OPTIONS';
+export const PUPPETEER_CORE = 'PUPPETEER_CORE';
 
 const args: PuppeteerLaunchOptions['args'] = [
   '--allow-insecure-localhost', // Enables TLS/SSL errors on localhost to be ignored (no interstitial, no blocking of requests).

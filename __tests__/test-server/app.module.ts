@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { CrawlerModule } from './crawler/crawler.module';
 import { PuppeteerModule } from '../../src';
-import { AppService } from './app.service';
 import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { CrawlerModule } from './crawler/crawler.module';
 
 @Module({
   imports: [
@@ -13,7 +13,6 @@ import { AppController } from './app.controller';
         },
       }),
     }),
-    PuppeteerModule.forFeature(),
     CrawlerModule,
   ],
   controllers: [AppController],
