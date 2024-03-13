@@ -7,7 +7,7 @@ import { PuppeteerModule } from '../../../src';
   imports: [
     PuppeteerModule.forRoot({
       launchOptions: {
-        headless: false,
+        headless: true,
       },
     }),
   ],

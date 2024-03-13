@@ -9,7 +9,7 @@ import { CrawlerModule } from './crawler/crawler.module';
     PuppeteerModule.forRootAsync({
       useFactory: () => ({
         launchOptions: {
-          headless: false,
+          headless: true,
         },
       }),
     }),
