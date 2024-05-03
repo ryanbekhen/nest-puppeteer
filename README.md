@@ -51,7 +51,7 @@ The `PuppeteerCore` service can be injected into your controllers and services b
 ```typescript
 // app.service.ts
 import { Injectable } from '@nestjs/common';
-import { InjectCore, PuppeteerCore } from 'nestjs-pptr';
+import { InjectCore, PuppeteerCore, PuppeteerInstance } from 'nestjs-pptr';
 import { Page } from 'puppeteer';
 
 @Injectable()
@@ -60,11 +60,11 @@ export class AppService {
   }
 
   async getScreenshot(url: string): Promise<Buffer> {
-    const browser = await this.puppeteer.launch();
-    const page: Page = await browser.newPage();
+    const instance: PuppeteerInstance = await this.puppeteer.launch('example');
+    const page: Page = await instance.browser.newPage();
     await page.goto(url);
     const screenshot = await page.screenshot();
-    await browser.close();
+    await instance.browser.close();
     return screenshot;
   }
 }
